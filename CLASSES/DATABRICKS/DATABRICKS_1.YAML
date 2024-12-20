@@ -13,8 +13,137 @@
   https://www.databricks.com/try-databricks#account
   https://community.cloud.databricks.com/?o=1716765228894122
 
-3) DATABRICKS WORKING:
+3) DATABRICKS WORKING, in each 2 hours, the community databricks will be disconnected, and we need to reconnect again.:
   3.1) create a cluster, first of all:
        go to the cluster, create a cluster, and choose the version of spark, and the type of the cluster.
-       
-  
+  3.2) put the file on the DBFS:
+       go to the workspace, create new table and put the file on the DBFS.
+       create table with ui -> select the cluster -> specify the file -> create table.
+  3.3) create a notebook:
+        go to the workspace, create a notebook, select the cluster, and write the code.
+  3.4) commands for files on the DBFS in notebook:
+        Lista de arquivos Json que estão armazenados no DBFS: 
+        %fs ls /databricks-datasets/structured-streaming/events/ 
+        
+         Exibindo um arquivo Json com as informações: 
+        %fs head /databricks-datasets/structured-streaming/events/file-1.json 
+        
+         Carregando 1 arquivo Json para o dataframe:
+        %python 
+        # Lendo 1 arquivo JSON    
+        dataf = spark.read.json("/databricks-datasets/structured
+        streaming/events/file-1.json") 
+        dataf.printSchema() 
+        dataf.show() 
+        
+         Carregando 2 arquivos Json para o dataframe:
+        %python 
+        #Lendo 2 arquivos JSON 
+        dataf2 = spark.read.json(['/databricks-datasets/structured
+        streaming/events/file-1.json','/databricks-datasets/structured
+        streaming/events/file-2.json']) 
+        dataf2.show()  
+        
+         Carregando TODOS os arquivos Json para o dataframe:
+        %python 
+        #Lendo todos os arquivos JSON 
+        dataf3 = spark.read.json("/databricks-datasets/structured
+        streaming/events/*.json") 
+        dataf3.show() 
+        
+
+         Unificando todos os arquivos que foram guardados no dataframe dataf3 para um novo arquivo JSON:
+        %python 
+        #Gravação dos dados que estão no dataframe para JSON em um único 
+        arquivo 
+        dataf3.write.json("/FileStore/tables/JSON/eventos.json") 
+        
+         Criação de uma tabela para executar SQL:
+        %python 
+        spark.sql("CREATE OR REPLACE TEMPORARY VIEW view_evento USING json OPTIONS" +  " (path '/FileStore/tables/JSON/eventos.json')") 
+        spark.sql("select action from view_evento").show()
+
+4) WORKING WITH PARQUET FILE. IT IS VERY FASTER FOR CONSULT AND ANALYSIS:
+    Criação de um dataframe com dados:
+    #criando um dataframe com dados fixos 
+    dados =[("Grimaldo 
+    ","Oliveira","Brasileira","Professor","M",3000), 
+    ("Ana ","Santos","Portuguesa","Atriz","F",4000), 
+    ("Roberto","Carlos","Brasileira","Analista","M",4000), 
+    ("Maria 
+    ","Santanna","Italiana","Dentista","F",6000), 
+    ("Jeane","Andrade","Portuguesa","Medica","F",7000)] 
+    colunas=["Primeiro_Nome","Ultimo_nome","Nacionalidade","Trabal
+    ho","Genero","Salario"] 
+    datafparquet=spark.createDataFrame(dados,colunas) 
+    datafparquet.show() 
+    
+     Gravando o arquivo parquet:
+    #criando o arquivo parquet 
+    datafparquet.write.parquet("/FileStore/tables/parquet/pessoal.
+    parquet") 
+    
+     Subscrevendo o arquivo parquet:
+    #Permite uma atualização do arquivo parquet 
+    datafparquet.write.mode('overwrite').parquet('/FileStore/table
+    s/parquet/pessoal.parquet') 
+    
+     Lendo o arquivo parquet e guardando em um dataframe: 
+    #Realizando uma atualização do arquivo parquet 
+    datafleitura= 
+    spark.read.parquet("/FileStore/tables/parquet/pessoal.parquet"
+    ) 
+    datafleitura.show() 
+    
+     Realizando uma consulta SQL:
+    #Criando uma consulta em SQL 
+    datafleitura.createOrReplaceTempView("Tabela_Parquet") 
+    ResultSQL = spark.sql("select * from Tabela_Parquet where 
+    salario >= 6000 ") 
+    ResultSQL.show() 
+
+    Particionando os dados em um arquivo parquet:
+    datafparquet.write.partitionBy("Nacionalidade","salario").mode
+    ("overwrite").parquet("/FileStore/tables/parquet/pessoal.parqu
+    et") 
+
+    Lendo o aquivo participonado do parquet:
+    datafnacional=spark.read.parquet("/FileStore/tables/parquet/pe
+    ssoal.parquet/Nacionalidade=Brasileira") 
+    datafnacional.show(truncate=False) 
+
+    Consultando diretamente o arquivo parquet particionado via SQL: 
+    spark.sql("CREATE OR REPLACE TEMPORARY VIEW Cidadao USING 
+    parquet OPTIONS (path 
+    \"/FileStore/tables/parquet/pessoal.parquet/Nacionalidade=Bras
+    ileira\")") 
+    spark.sql("SELECT * FROM Cidadao where 
+    Ultimo_nome='Oliveira'").show() 
+
+
+    Realizando a leitura do CSV e guardando no dataframe: 
+    #Leitura de arquivo CSV 
+    dataframesp= spark.read.format("csv").option("header", 
+    "true").load("/FileStore/tables/Datafiniti_Hotel_Revie
+    ws_Jun19.csv") 
+    dataframesp.show() 
+
+     Realizando a leitura do CSV e guardando dados no dataframe (via Scala):
+    %scala 
+    val dataframescala = 
+    sqlContext.read.format("com.databricks.spark.csv") 
+    .option("delimiter", ",") 
+    .load("/FileStore/tables/Datafiniti_Hotel_Reviews_Jun1
+    9.csv") 
+    dataframescala.show() 
+    
+     Gravando o dataframe no formato em parquet:
+    #criando o arquivo parquet 
+    dataframesp.write.parquet("/FileStore/tables/parquet/csvparque
+    t.parquet") 
+    
+     Realizando a leitura em parquet:
+    #Realizando uma leitura do arquivo parquet 
+    datafleitura=spark.read.parquet("/FileStore/tables/parquet/csv
+    parquet.parquet") 
+    datafleitura.show()
