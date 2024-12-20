@@ -1,0 +1,8 @@
+1) CLASS FROM: https://www.youtube.com/watch?v=PeaLln90YXg&list=PLACD_PaYcVF0wXU-UIuC6mhvJZ0uu0TlP
+    1) CREATE A USER IN AWS:
+        - IAM -> Users -> Add user -> User name -> PROVIDE user access to AWS console 
+              -> i want to create an iam user -> custom password -> set permisson 
+              -> attach existing policies directly -> AdministratorAccess -> next -> create user -> download .csv -> close.
+    
+    2) CREATE A SECRET CREDENTIALS:
+        - IAM -> Users -> user -> Security credentials -> create access key -> command line interface -> download .csv -> close.
