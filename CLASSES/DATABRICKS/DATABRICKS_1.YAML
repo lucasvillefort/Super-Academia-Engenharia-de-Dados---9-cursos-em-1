@@ -1,0 +1,20 @@
+1) WHAT IS THE DATABRICKS:  
+  1.1) it is a platform for data analysis, data engineering, and machine learning.
+  1.2) we have a notebook interface to write code in python, scala, R, and SQL.
+  1.3) we can create dashboards and reports, stored data as well.
+  1.4) it is made by a distributed processing, made by spark and a distributive storege (DBFS)
+  1.5) it stores data in DBFS and run with spark.
+  1.6) allow combination between several kidda data (delta lake)
+  1.7) all data is stored in DBFS (Databricks File System) inside the databricks cluster (server)
+  1.8) workspace is where we can create notebooks, libraries, and dashboards, cluster ...
+
+2) STEP BY STEP TO DATABRICKS ACCOUNT:
+  https://drive.google.com/file/d/1K13ol0pNRZ4k7NLxqMrR7EU76Z5l9oqe/view
+  https://www.databricks.com/try-databricks#account
+  https://community.cloud.databricks.com/?o=1716765228894122
+
+3) DATABRICKS WORKING:
+  3.1) create a cluster, first of all:
+       go to the cluster, create a cluster, and choose the version of spark, and the type of the cluster.
+       
+  
