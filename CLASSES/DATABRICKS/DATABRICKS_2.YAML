@@ -1,0 +1,33 @@
+1) INTERN DATABRIKS COMANDS:
+%fs ls /databricks-datasets/structured-streaming/events/ OR dbutils.fs.ls("/databricks-datasets/structured-streaming/events/")
+%fs head /databricks-datasets/structured-streaming/events/file-1.json OR dbutils.fs.head("/databricks-datasets/structured-streaming/events/file-1.json")
+%fs help OR dbutils.fs.help()
+%fs cp /databricks-datasets/structured-streaming/events/file-1.json file:/tmp/file-1.json OR dbutils.fs.cp("/databricks-datasets/structured-streaming/events/file-1.json", "file:/tmp/file-1.json")
+%fs mv file:/tmp/file-1.json file:/tmp/file-2.json OR dbutils.fs.mv("file:/tmp/file-1.json", "file:/tmp/file-2.json") # rename file
+%fs rm file:/tmp/file-2.json OR dbutils.fs.rm("file:/tmp/file-2.json") # This command is for remove a file
+%fs mkdirs file:/tmp/test OR dbutils.fs.mkdirs("file:/tmp/test")
+%fs ls file:/tmp/test OR dbutils.fs.ls("file:/tmp/test")
+%fs rm -r /FileStore/tables/ OR dbutils.fs.rm("/FileStore/tables/", True) # to remove a folder
+# to find a file:
+%fs find /FileStore/tables/ --name "*.csv" | grep "fa' # to find a file with csv extension
+
+2) INTEGRATING DATABRICKS WITH POWER BI STEP BY STEP:
+    - IN DATABRICKS:
+        1) go to the cluster
+        2) jdbc/odbc 
+        3) get the server hostname and http path
+
+    - IN POWER BI:
+        1) get data
+        2) get data from database
+        3) select the source
+        4) put the server hostname and http path
+        5) put user and password
+
+
+3) DATABRICKS DELTALAKE:
+    3.1) Delta Lake is an open-source storage layer that brings ACID transactions to Apache Spark and big data workloads.
+    3.2) it is a open source project which allows us to create a lakehouse architecture in databricks.
+    3.3) it can be used with batch and streaming processing beyold get to control the transactions of data in the lakehouse.
+
+    data source -> data lake -> delta lake -> 
