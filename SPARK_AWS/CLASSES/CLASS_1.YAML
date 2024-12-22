@@ -116,7 +116,7 @@
                         # stop the spark session:
                         spark.stop()
 
-    1.7) how to automate the process with snowflake:
-        - class: https://www.youtube.com/watch?v=QKCsWpygBrg
-
+    1.7) how to automate the process with Airflow :
+        - class: https://www.youtube.com/watch?v=hFvsMTcdysQ&list=PLACD_PaYcVF2hSjF-ayqSpQcKWPL37Qzr
+        
         
