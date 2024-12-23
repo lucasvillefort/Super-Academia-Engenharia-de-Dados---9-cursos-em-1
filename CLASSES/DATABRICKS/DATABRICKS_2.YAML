@@ -29,5 +29,17 @@
     3.1) Delta Lake is an open-source storage layer that brings ACID transactions to Apache Spark and big data workloads.
     3.2) it is a open source project which allows us to create a lakehouse architecture in databricks.
     3.3) it can be used with batch and streaming processing beyold get to control the transactions of data in the lakehouse.
-
+    3.4) transactions: insert, update, delete, merge, vacuum, optimize, etc. it is all operations that we can do with delta lake.
+                       it will be stored at _delta_log folder.
+    3.5) we can go back to the previous version of the data by having the transaction log:
+         to describe the history of the table:
+            DESCRIBE HISTORY '/user/hive/warehouse/purcharses'. # to see the history of the purcharses table
+         to return:
+            select * from delta.`/user/hive/warehouse/purcharses` version as of 0 # to return the data from the version 0
+         to clone the table:
+            CREATE TABLE delta.`/user/hive/warehouse/purcharses_clone` CLONE delta.`/user/hive/warehouse/purcharses` # to clone the table
+         to come back version:
+            RESTORE TABLE purchases TO VERSION AS OF 1 # to come back to the version 1 or any other version
+         to come back a row:
+            insert into purchases select * from purchases VERSION AS 1 WHERE Id = 1 # to come back to the Id 1 of the version 1
     data source -> data lake -> delta lake -> 
