@@ -116,7 +116,28 @@
                         # stop the spark session:
                         spark.stop()
 
-    1.7) how to automate the process with Airflow :
+    1.7) how to automate the process with Airflow step by step:
         - class: https://www.youtube.com/watch?v=hFvsMTcdysQ&list=PLACD_PaYcVF2hSjF-ayqSpQcKWPL37Qzr
         
+        - creaste a instance ec2 and install dependence
+        - install python3-env
+        - create a virtualenv and active it 
+        - create a secret access key 
+
+        - in terninal: awd configure
+                     put the access key and secret key
+                     region: us-west-2
+                     pip install apache-airflow
+                     pip apache-airflow-providers-amazon
+        - in browser: access the ip created with login
+        - create a bucket in s3 again:
+             one -> redfin-store-raw-data
+             two -> redfin-transform-data-yml
+             three -> redfin-script-yml -> for our notebook
+    
+    1.8) how to connect my aws airflow with my vscode:
+            
+
+
+
         
