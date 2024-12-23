@@ -142,6 +142,44 @@
                 HostName (public ip of the host)
                 User ubuntu (user of the host)
                 IdentityFile C:\Users\lucas\Downloads\lucasmatheus.pem (path of the .pem file)
+        - go to the airflow.cfg -> create a folder variable called dags_folder with the path 
+        - go to airflow folder -> create a folder called dags -> create a file called redfin_analytics.py
+
+        - in redfin_analytics.py script:
+            from airflow import DAG # to create a dag that is a container for our tasks
+            from datetime import datetime, timedelta # to set the start date and schedule interval for our dag
+            from  airflow.operator.dummy_operator import DummyOperator # to create a dummy task
+
+            # define the default arguments for the dag
+            default_args = {
+                'owner': 'airflow',
+                'depends_on_past': False,
+                'start_date': datetime(2021, 1, 1),
+                'email_on_failure': False,
+                'email_on_retry': False,
+                'retries': 1,
+                'retry_delay': timedelta(seconds=10),
+            }
+
+            # instance of the DAG 
+            with DAG('redfin_analitycs_spark_job_dag', default_args=default_args, catchup=False) as dag:
+                
+                # define the tasks
+                start = DummyOperator(task_id='tsk_start_pipeline')
+
+                # create my emr cluster:
+                create_emr_cluster = EmrCreateJobFlowOperator(
+                    task_id='tsk_create_emr_cluster',
+                    job_flow_overrides=job_flow_overrides, # job_flow_overrides is a dictionary with a standart configuration of the a cluster 
+                    aws_conn_id='aws_default',
+                    emr_conn_id='emr_default',
+                    dag=dag
+                )
+
+                end = DummyOperator(task_id='tsk_end_pipeline')
+
+                # set the task dependencies
+                start >> end
 
 
 
