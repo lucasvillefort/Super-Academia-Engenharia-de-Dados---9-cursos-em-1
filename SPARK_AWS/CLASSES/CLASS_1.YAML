@@ -140,7 +140,7 @@
         - in vscode: ctrl + shift + p -> remote-ssh: connect to host -> configure ssh host -> C:\Users\lucas\.ssh\config -> add the host, example:
             Host aws-airflow (name of the host)
                 HostName (public ip of the host)
-                User ec2-user(aws user)
+                User ubuntu (user of the host)
                 IdentityFile C:\Users\lucas\Downloads\lucasmatheus.pem (path of the .pem file)
 
 
