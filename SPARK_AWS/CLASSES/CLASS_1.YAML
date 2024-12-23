@@ -136,7 +136,14 @@
              three -> redfin-script-yml -> for our notebook
     
     1.8) how to connect my aws airflow with my vscode:
-            
+        - download the extention 'remote - ssh'
+        - in vscode: ctrl + shift + p -> remote-ssh: connect to host -> configure ssh host -> C:\Users\lucas\.ssh\config -> add the host, example:
+            Host aws-airflow (name of the host)
+                HostName (public ip of the host)
+                User ec2-user(aws user)
+                IdentityFile C:\Users\lucas\Downloads\lucasmatheus.pem (path of the .pem file)
+
+
 
 
 
