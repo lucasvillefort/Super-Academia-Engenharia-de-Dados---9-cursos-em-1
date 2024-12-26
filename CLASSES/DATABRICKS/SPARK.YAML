@@ -1,0 +1,11 @@
+1) APACHE SPARK WITH PYSPARK:
+  1.1) install anaconda, spark and java jdk
+  1.2) sparkContext: it is the main entry point for spark functionality. it is used to create RDDs, accumulators and broadcast variables on the cluster.
+        1.2.1) RDD: it will distribute the data across the cluster and perform operations in parallel.
+                    it will partition the data and perform the operations in parallel.
+                    it is for non-structured data.
+        1.2.2) Dataframe: it is a distributed collection of data organized into named columns.
+                          it is for structured data.
+        1.2.3) RDD to Dataframe:
+                    i can convert the RDD to Dataframe by using the toDF() method.
+        

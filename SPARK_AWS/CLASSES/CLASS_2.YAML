@@ -1,0 +1,90 @@
+
+1) how to connect my aws airflow with my vscode:
+        - download the extention 'remote - ssh'
+        - in vscode: ctrl + shift + p -> remote-ssh: connect to host -> configure ssh host -> C:\Users\lucas\.ssh\config -> add the host, example:
+            Host aws-airflow (name of the host)
+                HostName (public ip of the host)
+                User ubuntu (user of the host)
+                IdentityFile C:\Users\lucas\Downloads\lucasmatheus.pem (path of the .pem file)
+        - go to the airflow.cfg -> create a folder variable called dags_folder with the path 
+        - go to airflow folder -> create a folder called dags -> create a file called redfin_analytics.py
+
+        - in redfin_analytics.py script:
+            from airflow import DAG # to create a dag that is a container for our tasks
+            from datetime import datetime, timedelta # to set the start date and schedule interval for our dag
+            from  airflow.operator.dummy_operator import DummyOperator # to create a dummy task
+            from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreateJobFlowOperator, EmrAddStepsOperator, EmrTerminateJobFlowOperator # to create a task to create an emr cluster
+
+            # define the default arguments for the dag
+            default_args = {
+                'owner': 'airflow',
+                'depends_on_past': False,
+                'start_date': datetime(2021, 1, 1),
+                'email_on_failure': False,
+                'email_on_retry': False,
+                'retries': 1,
+                'retry_delay': timedelta(seconds=10),}
+
+            # create for example a job_flow_overrides:
+            job_flow_overrides = {
+                'Name': 'redfin-analytics-spark-job',
+                'ReleaseLabel': 'emr-6.2.0',
+                "Applications": [
+                    {
+                        "Name": "Spark"
+                    },
+                    {
+                        "Name": "JupyterEnterpriseGateway"
+                    }
+                ],
+                "LogUri": "s3://redfin-analytics-logs/emr-log-yml", # it is the path of my folder 
+                "VisibleToAllUsers": False,
+                'Instances': {
+                    'InstanceGroups': [
+                        {
+                            'Name': 'Master nodes',
+                            'Market': 'ON_DEMAND',
+                            'InstanceRole': 'MASTER',
+                            'InstanceType': 'm5.xlarge',
+                            'InstanceCount': 1,
+                        },
+                        {
+                            'Name': 'Core nodes',
+                            'Market': 'ON_DEMAND',
+                            'InstanceRole': 'CORE',
+                            'InstanceType': 'm5.xlarge',
+                            'InstanceCount': 2,
+                        }
+                    ],
+                     "Ec2SubnetId": "subnet-0c7b3b7b", # it is the subnet id of my vpc. I need to create a vpc for this and copy the subnet id here
+                     "Ec2KeyName": "emr-keypair_airflow", # it is the key name pair that i need to create
+                     "KeepJobFlowAliveWhenNoSteps": True, # it is to terminate the cluster when the job is done or not have any steps
+                     'TerminationProtected': False,
+                },
+                "JobFlowRole": "EMR_EC2_DefaultRole", # aws iam create-default-roles, in terminal, in environment create. to check: aws iam list-roles | grep EMR_EC2_DefaultRole\|EMR_DefaultRole
+                "ServiceRole": "EMR_DefaultRole",
+               
+            }
+
+            # instance of the DAG 
+            with DAG('redfin_analitycs_spark_job_dag', default_args=default_args, catchup=False) as dag:
+                
+                # define the tasks
+                start = DummyOperator(task_id='tsk_start_pipeline')
+
+                # create my emr cluster:
+                create_emr_cluster = EmrCreateJobFlowOperator(
+                    task_id='tsk_create_emr_cluster',
+                    job_flow_overrides=job_flow_overrides, # job_flow_overrides is a dictionary with a standart configuration of the a cluster 
+                    #aws_conn_id='aws_default',
+                    #emr_conn_id='emr_default',
+                    
+                )
+
+                end = DummyOperator(task_id='tsk_end_pipeline')
+
+                # set the task dependencies
+                start >> end
+
+
+2)  
