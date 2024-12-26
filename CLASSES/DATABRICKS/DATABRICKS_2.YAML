@@ -43,3 +43,8 @@
          to come back a row:
             insert into purchases select * from purchases VERSION AS 1 WHERE Id = 1 # to come back to the Id 1 of the version 1
     data source -> data lake -> delta lake -> 
+    3.6) schema evolution: it is the way that we can change the schema of the table without losing the data.
+         to change the schema:
+            ALTER TABLE purchases ADD COLUMN (new_column STRING) # to add a new column
+            ALTER TABLE purchases CHANGE COLUMN (old_column STRING COMMENT 'new comment') # to change the column
+            ALTER TABLE purchases DROP COLUMN (old_column) # to drop the column
